@@ -1,0 +1,9 @@
+# تجاهل ملفات الإعدادات الحساسة
+appsettings.json
+appsettings.Development.json
+
+# تجاهل ملفات المكتبات والمخرجات
+bin/
+obj/
+.vs/
+usersecrets.json
