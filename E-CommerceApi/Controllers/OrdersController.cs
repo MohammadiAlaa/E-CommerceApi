@@ -115,9 +115,8 @@ namespace E_CommerceApi.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            // جلب الطلب مع التحقق من الملكية
             var order = await _unitOfWork.Repository<Order>().FindAsync(
-                o => o.Id == id && o.UserId == userId, // التحقق من الملكية
+                o => o.Id == id && o.UserId == userId, 
                 new[] { "OrderItems" });
 
             if (order == null) return NotFound("Order not found or access denied.");
@@ -140,6 +139,30 @@ namespace E_CommerceApi.Controllers
 
             await _unitOfWork.CompleteAsync();
             return Ok(new { message = "Order cancelled and inventory restored." });
+        }
+
+        [HttpPut("{id}/Status")]
+        [Authorize(Roles = "Admin,Driver")] 
+        public async Task<IActionResult> UpdateStatus(int id, [FromBody] UpdateStatusDto dto)
+        {
+            var order = await _unitOfWork.Repository<Order>().FindAsync(
+                o => o.Id == id,
+                new[] { "Shipping", "Payment" });
+
+            if (order == null) return NotFound("Order not found.");
+
+            order.Status = dto.Status;
+
+            if (dto.Status == "Completed")
+            {
+                if (order.Shipping != null) order.Shipping.Status = "Delivered";
+                if (order.Payment != null) order.Payment.Status = "Completed";
+            }
+
+            _unitOfWork.Repository<Order>().Update(order);
+            await _unitOfWork.CompleteAsync();
+
+            return Ok(new { message = $"Order status updated to {dto.Status}" });
         }
     }
 }

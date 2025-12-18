@@ -135,7 +135,6 @@ namespace E_CommerceApi.Controllers
             var item = await _unitOfWork.Repository<Item>().GetByIdAsync(id);
             if (item == null) return NotFound();
 
-            // إضافة منطق لحذف الصورة من السيرفر قبل حذف الكائن من قاعدة البيانات (للحفاظ على مساحة التخزين)
             if (!string.IsNullOrEmpty(item.ImageUrl))
             {
                 var filePath = Path.Combine(_env.WebRootPath, item.ImageUrl.TrimStart('/'));

@@ -24,16 +24,14 @@ namespace E_CommerceApi.Controllers
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            // تحسين: التأكد أن المستخدم اشترى هذا المنتج قبل السماح له بالتقييم
             var hasPurchased = await _unitOfWork.Repository<Order>().FindAsync(o =>
                 o.UserId == userId &&
                 o.Status == "Completed" &&
                 o.OrderItems.Any(oi => oi.ItemId == dto.ItemId),
-                new[] { "OrderItems" });
+                new[] { "OrderItems" }
+            );
 
-            // ملاحظة: يمكنك تعطيل هذا الشرط حالياً للتجربة، لكنه مهم في المشاريع الحقيقية
-            // if (hasPurchased == null) return BadRequest("You can only review items you have purchased and received.");
-
+            
             var review = new Review
             {
                 ItemId = dto.ItemId,
@@ -67,7 +65,6 @@ namespace E_CommerceApi.Controllers
 
             if (review == null) return NotFound();
 
-            // التحقق: هل هو صاحب الريفيو أو أدمن؟
             if (review.UserId != userId && !isAdmin)
             {
                 return Forbid("You can only delete your own reviews.");

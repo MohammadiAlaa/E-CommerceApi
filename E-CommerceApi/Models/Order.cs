@@ -8,13 +8,12 @@ namespace E_CommerceApi.Models
         public DateTime OrderDate { get; set; } = DateTime.Now;
         public string Status { get; set; } = "Pending"; // Pending, Cancelled, Completed
 
-        // ربط الطلب بالمستخدم المسجل
         public string UserId { get; set; }
         [ForeignKey("UserId")]
         public ApplicationUser User { get; set; }
 
-        public Shipping Shipping { get; set; } // One-to-One
-        public Payment Payment { get; set; }   // One-to-One
+        public Shipping Shipping { get; set; } 
+        public Payment Payment { get; set; }   
         public List<OrderItem> OrderItems { get; set; }
     }
 }

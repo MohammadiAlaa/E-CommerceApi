@@ -54,7 +54,6 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-// 🚀 التعديل هنا: إعداد Swagger لاستخدام JWT Bearer Token
 builder.Services.AddSwaggerGen(option =>
 {
     option.SwaggerDoc("v1", new OpenApiInfo { Title = "E-Commerce API", Version = "v1" });

@@ -38,7 +38,6 @@ namespace E_CommerceApi.Controllers
             return Ok(result);
         }
 
-        // Roles Controller Logic inside Accounts or Separate
         [HttpPost("AddRole")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddRoleAsync([FromBody] AddRoleModel model)

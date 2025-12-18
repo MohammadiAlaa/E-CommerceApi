@@ -24,18 +24,15 @@ namespace E_CommerceApi.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var isAdmin = User.IsInRole("Admin");
 
-            // جلب الدفع مع الطلب المرتبط به
             var payment = await _unitOfWork.Repository<Payment>().FindAsync(p => p.Id == id, new[] { "Order" });
 
             if (payment == null) return NotFound("Payment record not found.");
 
-            // تأكد من أن الطلب يخص المستخدم أو أن المستخدم هو أدمن
             if (payment.Order.UserId != userId && !isAdmin)
                 return Forbid();
 
             if (payment.Status == "Completed") return BadRequest("Payment is already confirmed.");
 
-            // تحديث حالة الدفع
             payment.Status = "Completed";
             payment.PaymentDate = DateTime.Now;
             _unitOfWork.Repository<Payment>().Update(payment);

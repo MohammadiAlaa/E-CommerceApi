@@ -24,24 +24,19 @@ namespace E_CommerceApi.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            // 1. جلب سجل الشحن
             var shipping = await _unitOfWork.Repository<Shipping>().GetByIdAsync(id);
             if (shipping == null) return NotFound("Shipping record not found.");
 
-            // 2. تحديث بيانات الشحن
             shipping.Status = dto.Status;
             shipping.LastUpdated = DateTime.Now;
             _unitOfWork.Repository<Shipping>().Update(shipping);
 
-            // 3. 🚀 التحديث الذكي لحالة الطلب (Order Status)
             if (dto.Status == "Delivered")
             {
-                // جلب الأوردر المرتبط بالشحن ده
                 var order = await _unitOfWork.Repository<Order>().GetByIdAsync(shipping.OrderId);
 
                 if (order != null)
                 {
-                    // طالما وصل يبقى الأوردر اكتمل بنجاح
                     order.Status = "Completed";
                     _unitOfWork.Repository<Order>().Update(order);
                 }
@@ -51,12 +46,11 @@ namespace E_CommerceApi.Controllers
                 var order = await _unitOfWork.Repository<Order>().GetByIdAsync(shipping.OrderId);
                 if (order != null)
                 {
-                    order.Status = "Shipped"; // تحديث حالة الأوردر لـ "مشحون"
+                    order.Status = "Shipped"; 
                     _unitOfWork.Repository<Order>().Update(order);
                 }
             }
 
-            // 4. حفظ كل التغييرات في Transaction واحدة
             await _unitOfWork.CompleteAsync();
 
             return NoContent();

@@ -8,10 +8,8 @@ namespace E_CommerceApi.Models
         public string LastName { get; set; }
         public string Address { get; set; }
 
-        // هذا الجزء يربط المستخدم بجميع طلباته.
         public List<Order> Orders { get; set; } = new List<Order>();
 
-        //  لو عايز تجيب جميع مراجعات المستخدم
         public List<Review> Reviews { get; set; } = new List<Review>();
     }
 }

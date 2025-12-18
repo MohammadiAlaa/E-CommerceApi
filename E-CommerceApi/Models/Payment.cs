@@ -9,7 +9,7 @@ namespace E_CommerceApi.Models
 
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Amount { get; set; }
-        public string Method { get; set; } // CreditCard, PayPal, COD
+        public string Method { get; set; } 
         public string Status { get; set; } = "Pending"; // Pending, Completed, Failed
         public DateTime PaymentDate { get; set; } = DateTime.Now;
 

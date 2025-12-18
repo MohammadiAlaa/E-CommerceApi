@@ -7,7 +7,7 @@ namespace E_CommerceApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Admin")] // متاح فقط للأدمن
+    [Authorize(Roles = "Admin")] 
     public class DashboardController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
